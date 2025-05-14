@@ -12,3 +12,5 @@ class User(Base):
     use_career = Column(String(100))
     use_academic_level = Column(String(50))
     use_rol_id = Column(Integer, ForeignKey('role.rol_id'), nullable=False)
+    auth_provider = Column(String, default="local")  # 'local' o 'google'
+    hashed_password = Column(String, nullable=True)  # <= AGREGAR ESTA LINEA
