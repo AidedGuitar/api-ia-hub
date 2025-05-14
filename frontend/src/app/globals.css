@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+	--color-bismark-50: #f3f6f8;
+	--color-bismark-100: #e1eaec;
+	--color-bismark-200: #c6d7db;
+	--color-bismark-300: #9fb9c1;
+	--color-bismark-400: #7095a0;
+	--color-bismark-500: #557985;
+	--color-bismark-600: #4f6d7a;
+	--color-bismark-700: #40555e;
+	--color-bismark-800: #3a4950;
+	--color-bismark-900: #333f46;
+	--color-bismark-950: #1f272d;
+}
+
+body {
+	background-color: #f4f4f9;
+}
