@@ -1,24 +1,14 @@
-from pydantic import BaseModel, EmailStr
-from uuid import UUID
+from pydantic import BaseModel
 
-class SocialLoginRequest(BaseModel):
-    name: str
-    email: EmailStr
+class UserBase(BaseModel):
+    username: str
+    email: str
 
-class UserResponse(BaseModel):
-    use_id: UUID
-    use_name: str
-    use_email: EmailStr
-    use_rol_id: int
+class UserCreate(UserBase):
+    password: str
+
+class User(UserBase):
+    id: int
 
     class Config:
-        orm_mode = True  # Esto permite que se pueda convertir el modelo ORM en JSON automáticamente
-
-class UserCreate(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
+        orm_mode = True
