@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth  # importa tu router
+from app.routers import auth, user    # importa tu router
 
 # Inicializar la app
 app = FastAPI()
@@ -34,3 +34,4 @@ def get_recommendations(user_id: int = 1):
 
 # ⬇️ ESTA LÍNEA es la que debes añadir para registrar el router de auth
 app.include_router(auth.router)
+app.include_router(user.router)
