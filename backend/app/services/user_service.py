@@ -5,7 +5,12 @@ from app.schemas import user as user_schema
 from app.models.user import User
 from app.schemas.user import UserCreate, SocialLoginRequest, UserLogin
 from app.auth.password_handler import hash_password, verify_password
+from passlib.context import CryptContext
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def get_user_by_email(db: Session, email: str) -> User | None:
+    return db.query(User).filter(User.use_email == email).first()
 
 def get_user(db: Session, user_id: UUID):
      return db.query(user_model.User).filter(user_model.User.id == user_id).first()
@@ -52,17 +57,15 @@ def delete_user(db: Session, user_id: int):
     return {"ok": False}
 
 
-def social_login(db: Session, social_data: SocialLoginRequest):
-    # Buscar si el usuario ya existe
-    user = db.query(User).filter(User.use_email == social_data.email).first()
+def social_login(db: Session, email: str, name: str) -> User:
+    user = db.query(User).filter(User.use_email == email).first()
     if user:
         return user
 
-    # Si no existe, lo creamos
     new_user = User(
-        use_name=social_data.name,
-        use_email=social_data.email,
-        use_rol_id="d6d8d99a-e713-4d03-b2e2-6b66f05bdd6e",  # Asignar un rol numérico, por ejemplo 2 = "usuario normal"
+        use_name=name,
+        use_email=email,
+        use_rol_id=UUID("d6d8d99a-e713-4d03-b2e2-6b66f05bdd6e"),
         auth_provider="google"
     )
     db.add(new_user)
@@ -71,14 +74,14 @@ def social_login(db: Session, social_data: SocialLoginRequest):
     return new_user
 
 def login_user(db: Session, credentials: UserLogin):
-    user = db.query(User).filter(User.use_email == credentials.email).first()
+    user = db.query(User).filter(User.use_email == credentials.use_email).first()
     if not user:
-        raise ValueError("Usuario no encontrado.")
+        raise ValueError("Contraseña incorrecta o el usuario no existe.")
 
     if user.auth_provider != "local":
         raise ValueError("Este usuario debe iniciar sesión con Google.")
 
     if not verify_password(credentials.password, user.hashed_password):
-        raise ValueError("Contraseña incorrecta.")
+        raise ValueError("Contraseña incorrecta o el usuario no existe.")
 
     return user

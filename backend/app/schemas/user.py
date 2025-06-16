@@ -17,7 +17,7 @@ class UserRead(UserBase):
     id: UUID
 
     class Config:
-        orm_mode = True
+        from_attributes  = True
 
 class User(BaseModel):
     id: int
@@ -25,11 +25,10 @@ class User(BaseModel):
     use_email: str
 
     class Config:
-        orm_mode = True
+        from_attributes  = True
         
 class SocialLoginRequest(BaseModel):
-    use_name: str
-    use_email: EmailStr       
+    id_token: str      
         
 class UserResponse(BaseModel):
     id: UUID
@@ -38,14 +37,8 @@ class UserResponse(BaseModel):
     use_rol_id: UUID
 
     class Config:
-        orm_mode = True  # Esto permite que se pueda convertir el modelo ORM en JSON automáticamente
+        from_attributes  = True  # Esto permite que se pueda convertir el modelo ORM en JSON automáticamente
 
 class UserLogin(BaseModel):
     use_email: EmailStr
     password: str
-    
-class UserOut(UserBase):
-    id: UUID
-
-    class Config:
-        orm_mode = True
