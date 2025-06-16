@@ -1,17 +1,18 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth, user    # importa tu router
+from app.core.dependencies import get_current_user
 
 # Inicializar la app
 app = FastAPI()
 
-# Habilitar CORS para que Next.js pueda hacer peticiones
+# CORS: permite enviar cookies (credenciales)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción, especifica el dominio
-    allow_credentials=True,
+    allow_origins=["http://localhost:3000"],  # tu front
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
 
 # Simulamos una lista de aplicaciones externas
@@ -32,6 +33,10 @@ def get_recommendations(user_id: int = 1):
     # Simulamos una recomendación básica (las dos primeras apps)
     return {"user_id": user_id, "recommendations": mock_apps[:2]}
 
-# ⬇️ ESTA LÍNEA es la que debes añadir para registrar el router de auth
+# Rutas públicas
 app.include_router(auth.router)
-app.include_router(user.router)
+
+# Rutas protegidas: inyectan get_current_user
+app.include_router(user.router, dependencies=[Depends(get_current_user)])
+# app.include_router(application.router, prefix="/apps", dependencies=[Depends(get_current_user)])
+# app.include_router(feedback.router, prefix="/feedback", dependencies=[Depends(get_current_user)])
