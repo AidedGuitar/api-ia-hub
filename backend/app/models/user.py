@@ -1,5 +1,6 @@
 import uuid
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, DateTime
+from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
 from .base import Base
 
@@ -14,3 +15,5 @@ class User(Base):
     use_rol_id = Column(UUID(as_uuid=True), ForeignKey('role.id'), nullable=False)
     auth_provider = Column(String, default="local")  # 'local' o 'google'
     hashed_password = Column(String, nullable=True)  # <= AGREGAR ESTA LINEA
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

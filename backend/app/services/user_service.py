@@ -3,11 +3,8 @@ from uuid import UUID
 from app.models import user as user_model
 from app.schemas import user as user_schema
 from app.models.user import User
-from app.schemas.user import UserCreate, SocialLoginRequest, UserLogin
+from app.schemas.user import UserCreate, UserLogin
 from app.auth.password_handler import hash_password, verify_password
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def get_user_by_email(db: Session, email: str) -> User | None:
     return db.query(User).filter(User.use_email == email).first()
