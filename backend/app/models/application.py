@@ -3,6 +3,7 @@ from sqlalchemy import Column, String, Text, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from .base import Base
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
 class Application(Base):
     __tablename__ = 'application'
@@ -15,3 +16,7 @@ class Application(Base):
     app_source = Column(String(50), nullable=True)  # p.ej. "manual" o "ia"
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relación inversa para feedbacks e interacciones
+    feedbacks = relationship('Feedback', back_populates='application', cascade='all, delete-orphan')
+    interactions = relationship('Interaction', back_populates='application', cascade='all, delete-orphan')

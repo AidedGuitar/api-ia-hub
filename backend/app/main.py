@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, user, application, interaction    # importa tu router
+from app.routers import auth, user, application, interaction, feedback    # importa tu router
 from app.core.dependencies import get_current_user
 
 # Inicializar la app
@@ -40,3 +40,4 @@ app.include_router(auth.router)
 app.include_router(user.router, dependencies=[Depends(get_current_user)])
 app.include_router(application.router, dependencies=[Depends(get_current_user)])
 app.include_router(interaction.router, dependencies=[Depends(get_current_user)])
+app.include_router(feedback.router, dependencies=[Depends(get_current_user)])

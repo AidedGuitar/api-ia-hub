@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from .base import Base
 import enum
 import uuid
+from sqlalchemy.orm import relationship
 
 class InteractionType(str, enum.Enum):
     view = "view"
@@ -28,3 +29,6 @@ class Interaction(Base):
         Index('ix_interaction_user_app', 'int_use_id', 'int_app_id'),
         Index('ix_interaction_timestamp', 'int_timestamp'),
     )
+    
+    user = relationship('User', back_populates='interactions')
+    application = relationship('Application', back_populates='interactions')
