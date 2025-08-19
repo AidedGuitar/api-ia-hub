@@ -4,6 +4,11 @@ from sqlalchemy import func
 from app.models.feedback import Feedback
 from app.schemas.feedback import FeedbackCreate, FeedbackUpdate
 
+def get_feedback_by_user_app(db: Session, user_id: UUID, app_id: UUID) -> Feedback | None:
+    return db.query(Feedback).filter(
+        Feedback.fee_use_id == user_id,
+        Feedback.fee_app_id == app_id
+    ).first()
 
 def get_feedback(db: Session, feedback_id: UUID) -> Feedback | None:
     return db.query(Feedback).filter(Feedback.id == feedback_id).first()

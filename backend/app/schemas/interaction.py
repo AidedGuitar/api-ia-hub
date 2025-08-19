@@ -15,7 +15,6 @@ class InteractionCreate(InteractionBase):
 
 class InteractionUpdate(BaseModel):
     int_type: Optional[InteractionType]
-    int_timestamp: Optional[datetime]
 
 class InteractionRead(InteractionBase):
     id: UUID

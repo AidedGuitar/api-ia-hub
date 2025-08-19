@@ -6,7 +6,7 @@ from app.schemas.feedback import FeedbackCreate, FeedbackRead, FeedbackUpdate
 from app.services.feedback_service import (
     get_feedback, get_feedbacks,
     create_feedback, update_feedback, delete_feedback,
-    get_app_rating
+    get_app_rating, get_feedback_by_user_app
 )
 from app.core.dependencies import get_current_user, get_db
 
@@ -42,6 +42,14 @@ def create_feedback_endpoint(
     feedback_in: FeedbackCreate,
     db: Session = Depends(get_db)
 ):
+     # Validar unicidad: un feedback por usuario-app
+    existing = get_feedback_by_user_app(db, feedback_in.fee_use_id, feedback_in.fee_app_id)
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="El feedback para este usuario y aplicación ya existe"
+        )
+    
     return create_feedback(db, feedback_in)
 
 @router.put("/{feedback_id}", response_model=FeedbackRead)
