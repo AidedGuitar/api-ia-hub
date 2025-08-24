@@ -1,19 +1,57 @@
 @import "tailwindcss";
 
 @theme {
-	--color-bismark-50: #f3f6f8;
-	--color-bismark-100: #e1eaec;
-	--color-bismark-200: #c6d7db;
-	--color-bismark-300: #9fb9c1;
-	--color-bismark-400: #7095a0;
-	--color-bismark-500: #557985;
-	--color-bismark-600: #4f6d7a;
-	--color-bismark-700: #40555e;
-	--color-bismark-800: #3a4950;
-	--color-bismark-900: #333f46;
-	--color-bismark-950: #1f272d;
+	--color-edtech-blue-50: #e9f9ff;
+	--color-edtech-blue-100: #cef0ff;
+	--color-edtech-blue-200: #a7e6ff;
+	--color-edtech-blue-300: #6bdbff;
+	--color-edtech-blue-400: #26c3ff;
+	--color-edtech-blue-500: #009bff;
+	--color-edtech-blue-600: #0071ff;
+	--color-edtech-blue-700: #0056ff;
+	--color-edtech-blue-800: #0049e6;
+	--color-edtech-blue-900: #0043b3;
+	--color-edtech-blue: #002968;
+
+	--color-edtech-green-50: #edfff2;
+	--color-edtech-green-100: #d6ffe2;
+	--color-edtech-green-200: #afffc7;
+	--color-edtech-green-300: #71ff9c;
+	--color-edtech-green-400: #2dfb6a;
+	--color-edtech-green-500: #02e547;
+	--color-edtech-green-600: #00bf36;
+	--color-edtech-green: #00a031;
+	--color-edtech-green-800: #067528;
+	--color-edtech-green-900: #085f24;
+	--color-edtech-green-950: #003611;
+
+	--color-edtech-backgroung-50: #f4f6f6;
+
+	--color-edtech-acent-50: #fdfde9;
+	--color-edtech-acent-100: #fdfbc4;
+	--color-edtech-acent-200: #fbf38d;
+	--color-edtech-acent-300: #f9e54b;
+	--color-edtech-acent-400: #f5d31a;
+	--color-edtech-acent-500: #f1c40f;
+	--color-edtech-acent-600: #c59009;
+	--color-edtech-acent-700: #9d670b;
+	--color-edtech-acent-800: #825211;
+	--color-edtech-acent-900: #6f4314;
+	--color-edtech-acent-950: #412307;
+
+	--color-edtech-error-50: #fef3f2;
+	--color-edtech-error-100: #fde5e3;
+	--color-edtech-error-200: #fcd0cc;
+	--color-edtech-error-300: #f9b0a8;
+	--color-edtech-error-400: #f38276;
+	--color-edtech-error-500: #e74c3c;
+	--color-edtech-error-600: #d53d2d;
+	--color-edtech-error-700: #b33022;
+	--color-edtech-error-800: #942b20;
+	--color-edtech-error-900: #7b2921;
+	--color-edtech-error-950: #43110c;
 }
 
 body {
-	background-color: #f4f4f9;
+	background-color: #f4f6f6;
 }

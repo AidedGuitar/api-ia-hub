@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Login() {
 	return (
-		<div className="flex p-10 bg-linear-to-r from-bismark-200 to-bismark-600 min-h-screen items-center justify-center">
+		<div className="flex p-5 md:p-10 bg-linear-to-r from-edtech-blue-300 to-edtech-blue-900 h-svh md:h-screen md:items-center justify-center">
 			<LoginMain />
 		</div>
 	);

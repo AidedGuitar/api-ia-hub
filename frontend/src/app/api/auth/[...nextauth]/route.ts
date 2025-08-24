@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
 	providers: [
@@ -17,14 +17,17 @@ export const authOptions: NextAuthOptions = {
 			async authorize(credentials) {
 				if (!credentials?.email || !credentials?.password) return null;
 
-				const res = await fetch("http://localhost:8000/auth/login", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						email: credentials.email,
-						password: credentials.password,
-					}),
-				});
+				const res = await fetch(
+					`${process.env.NEXT_PUBLIC_AUTH_URL}/auth/login`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							email: credentials.email,
+							password: credentials.password,
+						}),
+					}
+				);
 
 				if (!res.ok) return null;
 
@@ -34,23 +37,24 @@ export const authOptions: NextAuthOptions = {
 		}),
 	],
 	callbacks: {
-		async signIn({ user, account }) {
+		async signIn({ account }) {
 			if (account?.provider === "google") {
+				const { id_token } = account;
+
 				try {
 					const res = await fetch(
-						"http://localhost:8000/auth/social-login",
+						`${process.env.NEXT_PUBLIC_AUTH_URL}/auth/social-login`,
 						{
 							method: "POST",
 							headers: { "Content-Type": "application/json" },
 							body: JSON.stringify({
-								email: user.email,
-								name: user.name,
+								id_token,
 							}),
 						}
 					);
 
 					if (!res.ok) {
-						console.error("Backend error (social-login)");
+						console.error("Backend error (social-login)", res);
 						return false;
 					}
 				} catch (err) {
@@ -69,7 +73,7 @@ export const authOptions: NextAuthOptions = {
 	pages: {
 		signIn: "/login",
 	},
-	secret: process.env.NEXTAUTH_SECRET,
+	secret: process.env.NEXT_AUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);

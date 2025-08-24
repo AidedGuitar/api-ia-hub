@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 type App = {
 	id: number;
@@ -14,7 +14,7 @@ export default function Home() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:8000/recommendations?user_id=1")
+			.get(`${process.env.NEXT_PUBLIC_AUTH_URL}/recommendations?user_id=1`)
 			.then((response) => {
 				setApps(response.data.recommendations);
 			})
@@ -23,8 +23,12 @@ export default function Home() {
 
 	return (
 		<main className="p-8">
-			<h1 className="text-2xl font-bold mb-4 text-emerald-500">Recomendaciones de Apps</h1>
-			<h1 className="text-2xl font-bold mb-4 text-[#10b981]">Recomendaciones de Apds</h1>
+			<h1 className="text-2xl font-bold mb-4 text-emerald-500">
+				Recomendaciones de Apps
+			</h1>
+			<h1 className="text-2xl font-bold mb-4 text-[#10b981]">
+				Recomendaciones de Apds
+			</h1>
 			<ul className="space-y-2">
 				{apps.map((app) => (
 					<li key={app.id} className="border p-4 rounded">
