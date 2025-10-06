@@ -8,3 +8,6 @@ python-dotenv
 pydantic-settings
 python-jose[cryptography]
 requests
+scikit-learn
+pandas
+numpy
