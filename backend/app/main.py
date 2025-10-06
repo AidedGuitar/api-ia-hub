@@ -15,14 +15,6 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-# Simulamos una lista de aplicaciones externas
-mock_apps = [
-    {"id": 1, "name": "Spotify", "category": "Música"},
-    {"id": 2, "name": "Netflix", "category": "Entretenimiento"},
-    {"id": 3, "name": "Duolingo", "category": "Educación"},
-    {"id": 4, "name": "Asana", "category": "Productividad"},
-]
-
 #ruta raiz
 @app.get("/api")
 def root():
