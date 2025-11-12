@@ -5,8 +5,8 @@ from typing import Optional
 from app.models.interaction import InteractionType
 
 class InteractionBase(BaseModel):
-    int_use_id: UUID
-    int_app_id: UUID
+    user_id: UUID
+    application_id: UUID
     int_type: InteractionType
     int_timestamp: Optional[datetime] = None
 
