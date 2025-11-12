@@ -1,4 +1,3 @@
-# app/auth/jwt_handler.py
 import time
 from jose import jwt, JWTError
 from fastapi import HTTPException, status
