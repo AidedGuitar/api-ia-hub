@@ -3,6 +3,9 @@ from uuid import UUID
 from sqlalchemy import func
 from app.models.feedback import Feedback
 from app.schemas.feedback import FeedbackCreate, FeedbackUpdate
+from app.models.user import User
+from fastapi import HTTPException, status
+from app.models.application import Application
 
 def get_feedback_by_user_app(db: Session, user_id: UUID, app_id: UUID) -> Feedback | None:
     return db.query(Feedback).filter(
@@ -19,6 +22,23 @@ def get_feedbacks(db: Session, skip: int = 0, limit: int = 100) -> list[Feedback
 
 
 def create_feedback(db: Session, feedback_in: FeedbackCreate) -> Feedback:
+    # Validar existencia del usuario
+    user = db.query(User).filter(User.id == feedback_in.user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"El usuario con ID {feedback_in.user_id} no existe"
+        )
+
+    # Validar existencia de la aplicación
+    app = db.query(Application).filter(Application.id == feedback_in.application_id).first()
+    if not app:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"La aplicación con ID {feedback_in.application_id} no existe"
+        )
+
+    # Crear el feedback
     feedback = Feedback(**feedback_in.dict())
     db.add(feedback)
     db.commit()
