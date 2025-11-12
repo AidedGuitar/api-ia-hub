@@ -43,7 +43,7 @@ def create_feedback_endpoint(
     db: Session = Depends(get_db)
 ):
      # Validar unicidad: un feedback por usuario-app
-    existing = get_feedback_by_user_app(db, feedback_in.fee_use_id, feedback_in.fee_app_id)
+    existing = get_feedback_by_user_app(db, feedback_in.user_id, feedback_in.application_id)
     if existing:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

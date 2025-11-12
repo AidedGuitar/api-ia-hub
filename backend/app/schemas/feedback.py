@@ -4,8 +4,8 @@ from datetime import datetime
 from typing import Optional
 
 class FeedbackBase(BaseModel):
-    fee_use_id: UUID
-    fee_app_id: UUID
+    user_id: UUID
+    application_id: UUID
     fee_rating: int = Field(..., ge=1, le=5)
     fee_comment: Optional[str]
     fee_date: Optional[datetime]
