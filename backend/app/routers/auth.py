@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, Response, HTTPException, status
 from sqlalchemy.orm import Session
-from app.schemas.user import SocialLoginRequest, UserResponse, UserCreate, UserLogin
+from app.schemas.user import SocialLoginRequest, UserResponse, UserCreate, UserLogin, TokenResponse
 from app.core.dependencies import get_db
 from app.services.user_service import social_login, create_user, login_user
 from app.auth.jwt_handler import create_access_token
 from app.auth.google_oauth import verify_google_token
 from pydantic import EmailStr, TypeAdapter
 from app.config import settings
+from sqlalchemy.exc import IntegrityError
 import re
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -33,17 +34,15 @@ def validate_password(password: str):
 # ---------------------------
 # Endpoints
 # ---------------------------
-@router.post("/login", response_model=UserResponse)
+@router.post("/login", response_model=TokenResponse)
 def login_user_endpoint(credentials: UserLogin, response: Response, db: Session = Depends(get_db)):
-    validate_email(credentials.use_email)
-
     try:
         user = login_user(db, credentials)
-
+        
         if not user:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Credenciales inválidas.")
 
-        token = create_access_token({"sub": user.use_email})
+        token = create_access_token(user.use_email)
         if not token:
             raise HTTPException(status_code=500, detail="No se pudo generar el token de acceso.")
 
@@ -56,9 +55,13 @@ def login_user_endpoint(credentials: UserLogin, response: Response, db: Session 
             domain=settings.COOKIE_DOMAIN,
         )
 
-        return user
+        return {
+                "access_token": token,
+                "token_type": "bearer",
+            }
+        
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except Exception:
         raise HTTPException(status_code=500, detail="Error interno en el inicio de sesión.")
     
@@ -100,18 +103,29 @@ def google_social_login(payload: SocialLoginRequest, response: Response, db: Ses
 
 @router.post("/register", response_model=UserResponse)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
-    print(user_in)
-    validate_email(user_in.use_email)
-    validate_password(user_in.password)
-
     try:
         user = create_user(db, user_in)
         return user
+
+    except IntegrityError as e:
+        db.rollback()
+        if "user_use_email_key" in str(e.orig):
+            raise HTTPException(
+                status_code=409,
+                detail="El correo electrónico ya está registrado."
+            )
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Error en los datos proporcionados."
+            )
+
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception:
-        raise HTTPException(status_code=500, detail="Error interno al registrar el usuario.")
 
+    except Exception as e:
+        print(f"Error inesperado en /register: {e}")
+        raise HTTPException(status_code=500, detail="Error interno al registrar el usuario.")
 
 @router.post("/logout")
 def logout(response: Response):
