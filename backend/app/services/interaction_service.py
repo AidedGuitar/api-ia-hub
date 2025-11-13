@@ -57,8 +57,11 @@ def update_interaction(db: Session, interaction_id: UUID, interaction_in: Intera
     return interaction
 
 
-def delete_interaction(db: Session, interaction_id: UUID) -> bool:
-    interaction = get_interaction(db, interaction_id)
+def delete_interaction(db: Session, interaction_id: UUID, current_user_id: UUID) -> bool:
+    interaction = db.query(Interaction).filter(
+        Interaction.id == interaction_id,
+        Interaction.user_id == current_user_id  # Solo suyas
+    ).first()
     if not interaction:
         return False
     db.delete(interaction)

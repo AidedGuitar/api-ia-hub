@@ -57,8 +57,11 @@ def update_feedback(db: Session, feedback_id: UUID, feedback_in: FeedbackUpdate)
     return feedback
 
 
-def delete_feedback(db: Session, feedback_id: UUID) -> bool:
-    feedback = get_feedback(db, feedback_id)
+def delete_feedback(db: Session, feedback_id: UUID, current_user_id: UUID) -> bool:
+    feedback = db.query(Feedback).filter(
+        Feedback.id == feedback_id,
+        Feedback.user_id == current_user_id  # Solo suyas
+    ).first()
     if not feedback:
         return False
     db.delete(feedback)

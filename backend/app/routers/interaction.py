@@ -5,6 +5,7 @@ from app.models.interaction import InteractionType
 from app.schemas.interaction import (InteractionCreate, InteractionRead, InteractionUpdate)
 from app.services.interaction_service import (get_interaction, get_interactions, create_interaction, update_interaction, delete_interaction)
 from app.core.dependencies import get_current_user, get_db
+from app.models.user import User
 
 router = APIRouter(
     prefix="/interactions",
@@ -58,11 +59,16 @@ def update_interaction_endpoint(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Interacción no encontrada")
     return interaction
 
-@router.delete("/{interaction_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{interaction_id}", status_code=status.HTTP_200_OK)
 def delete_interaction_endpoint(
     interaction_id: UUID,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    success = delete_interaction(db, interaction_id)
+    success = delete_interaction(db, interaction_id, current_user.id)
     if not success:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Interacción no encontrada")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Interacción no encontrada"
+        )
+    return {"message": "Interacción eliminada correctamente"}

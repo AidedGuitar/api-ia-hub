@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from uuid import UUID
-
+from app.models.user import User
 from app.schemas.feedback import FeedbackCreate, FeedbackRead, FeedbackUpdate
 from app.services.feedback_service import (
     get_feedback, get_feedbacks,
@@ -63,14 +63,19 @@ def update_feedback_endpoint(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Feedback no encontrado")
     return fb
 
-@router.delete("/{feedback_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{feedback_id}", status_code=status.HTTP_200_OK)
 def delete_feedback_endpoint(
     feedback_id: UUID,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    success = delete_feedback(db, feedback_id)
+    success = delete_feedback(db, feedback_id, current_user.id)
     if not success:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Feedback no encontrado")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Feedback no encontrado"
+        )
+    return {"message": "Interacción eliminada correctamente"}
 
 @router.get("/app/{app_id}/rating")
 def read_app_rating(
