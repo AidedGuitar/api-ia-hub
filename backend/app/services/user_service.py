@@ -45,20 +45,12 @@ def update_user(db: Session, user_id: UUID, user: user_schema.UserCreate):
         db_user.use_name = user.use_name
         db_user.use_email = user.use_email
         db_user.use_rol_id = user.use_rol_id or STUDENT_ROLE_ID
+        db_user.use_career = user.use_career
+        db_user.use_academic_level = user.use_academic_level
         db_user.hashed_password = hash_password(user.password)
         db.commit()
         db.refresh(db_user)
     return db_user
-
-def update_user_profile(db: Session, user_id: UUID, profile_data: user_schema.UserProfileUpdate):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise ValueError("Usuario no encontrado")
-    user.use_career = profile_data.use_career
-    user.use_academic_level = profile_data.use_academic_level
-    db.commit()
-    db.refresh(user)
-    return user
 
 def delete_user(db: Session, user_id: UUID):
     db_user = db.query(User).filter(User.id == user_id).first()

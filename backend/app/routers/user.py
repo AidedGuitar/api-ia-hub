@@ -34,15 +34,6 @@ def update_user(user_id: UUID, user: user_schema.UserCreate, db: Session = Depen
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@router.put("/profile", response_model=user_schema.UserRead)
-def update_profile(
-    profile_data:user_schema. UserProfileUpdate,  # Nuevo esquema
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    updated_user = user_service.update_user_profile(db, current_user.id, profile_data)
-    return updated_user
-
 @router.delete("/{user_id}", response_model=dict)
 def delete_user(user_id: UUID, db: Session = Depends(get_db)):
     return user_service.delete_user(db, user_id)

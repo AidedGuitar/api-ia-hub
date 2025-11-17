@@ -11,3 +11,6 @@ requests
 scikit-learn
 pandas
 numpy
+pytest 
+pytest-asyncio 
+httpx
