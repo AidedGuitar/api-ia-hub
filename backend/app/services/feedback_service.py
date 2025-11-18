@@ -39,7 +39,7 @@ def create_feedback(db: Session, feedback_in: FeedbackCreate) -> Feedback:
         )
 
     # Crear el feedback
-    feedback = Feedback(**feedback_in.dict())
+    feedback = Feedback(**feedback_in.model_dump())
     db.add(feedback)
     db.commit()
     db.refresh(feedback)
@@ -50,7 +50,7 @@ def update_feedback(db: Session, feedback_id: UUID, feedback_in: FeedbackUpdate)
     feedback = get_feedback(db, feedback_id)
     if not feedback:
         return None
-    for field, value in feedback_in.dict(exclude_unset=True).items():
+    for field, value in feedback_in.model_dump(exclude_unset=True).items():
         setattr(feedback, field, value)
     db.commit()
     db.refresh(feedback)

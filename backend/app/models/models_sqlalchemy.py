@@ -80,7 +80,6 @@ class Application(Base):
     # Campos clave para el motor de recomendación
     app_keywords = Column(Text, nullable=True)          # Palabras clave: "matemáticas, cálculo"
     app_academic_level = Column(String(50), nullable=True)  # "Primer semestre", "Avanzado"
-    app_credits = Column(Integer, default=3)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

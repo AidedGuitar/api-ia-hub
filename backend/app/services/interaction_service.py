@@ -35,7 +35,7 @@ def create_interaction(db: Session, interaction_in: InteractionCreate) -> Intera
         )
         
     # Crear la interacción
-    interaction = Interaction(**interaction_in.dict())    
+    interaction = Interaction(**interaction_in.model_dump())    
     db.add(interaction)
     try:
         db.commit()
@@ -50,7 +50,7 @@ def update_interaction(db: Session, interaction_id: UUID, interaction_in: Intera
     interaction = get_interaction(db, interaction_id)
     if not interaction:
         return None
-    for field, value in interaction_in.dict(exclude_unset=True).items():
+    for field, value in interaction_in.model_dump(exclude_unset=True).items():
         setattr(interaction, field, value)
     db.commit()
     db.refresh(interaction)

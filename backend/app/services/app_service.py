@@ -11,7 +11,7 @@ def get_apps(db: Session, skip: int = 0, limit: int = 100) -> list[Application]:
     return db.query(Application).offset(skip).limit(limit).all()
 
 def create_app(db: Session, app_in: ApplicationCreate) -> Application:
-    app = Application(**app_in.dict())
+    app = Application(**app_in.model_dump())
     db.add(app)
     try:
         db.commit()
@@ -25,7 +25,7 @@ def update_app(db: Session, app_id: UUID, app_in: ApplicationUpdate) -> Applicat
     app = get_app(db, app_id)
     if not app:
         return None
-    for field, value in app_in.dict(exclude_unset=True).items():
+    for field, value in app_in.model_dump(exclude_unset=True).items():
         setattr(app, field, value)
     db.commit()
     db.refresh(app)
