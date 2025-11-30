@@ -6,10 +6,9 @@ Ejecutar desde la raíz del backend: `python seed_data.py`
 import uuid
 from datetime import datetime, timedelta
 from random import choice, randint, sample
-
-from app.database import SessionLocal, engine
-from app.models.models_sqlalchemy import Base, User, Application, Interaction, Feedback, Role
-from app.auth.password_handler import hash_password
+from database import SessionLocal, engine
+from models.models_sqlalchemy import Base, User, Application, Interaction, Feedback, Role
+from auth.password_handler import hash_password
 
 # Crear todas las tablas si no existen
 Base.metadata.create_all(bind=engine)
@@ -32,82 +31,83 @@ def create_applications(db):
     """Crea un catálogo de materias/aplicaciones realistas."""
     applications_data = [
         {
-            "name": "Cálculo Diferencial",
-            "category": "Matemáticas",
-            "description": "Fundamentos del cálculo: límites, derivadas e integrales.",
-            "keywords": "matemáticas, cálculo, derivadas, límites, funciones",
-            "academic_level": "Primer semestre",
-            "credits": 4
+            "app_name": "Khan Academy",
+            "app_description": "Plataforma educativa gratuita con cursos en matemáticas, ciencias y más.",
+            "app_link": "https://www.khanacademy.org",
+            "app_academic_level": "Universitario",
+            "app_keywords": "matemáticas, ciencias, fundamentos, autodidacta",
+            "app_category": "STEM"
         },
         {
-            "name": "Programación I",
-            "category": "Ingeniería de Sistemas",
-            "description": "Introducción a la programación con Python.",
-            "keywords": "programación, python, algoritmos, lógica, desarrollo",
-            "academic_level": "Primer semestre",
-            "credits": 3
+            "app_name": "Coursera",
+            "app_description": "Cursos online dictados por universidades y empresas líderes en el mundo.",
+            "app_link": "https://www.coursera.org",
+            "app_academic_level": "Universitario",
+            "app_keywords": "cursos online, certificaciones, profesional",
+            "app_category": "Cursos"
         },
         {
-            "name": "Álgebra Lineal",
-            "category": "Matemáticas",
-            "description": "Vectores, matrices, sistemas de ecuaciones y espacios vectoriales.",
-            "keywords": "matemáticas, matrices, vectores, álgebra, ecuaciones",
-            "academic_level": "Segundo semestre",
-            "credits": 3
+            "app_name": "Duolingo",
+            "app_description": "Aplicación gamificada para aprender idiomas de forma divertida.",
+            "app_link": "https://www.duolingo.com",
+            "app_academic_level": "Todos",
+            "app_keywords": "idiomas, gamificación, aprendizaje rápido",
+            "app_category": "Idiomas"
         },
         {
-            "name": "Estructuras de Datos",
-            "category": "Ingeniería de Sistemas",
-            "description": "Listas, pilas, colas, árboles y grafos.",
-            "keywords": "programación, estructuras, árboles, grafos, algoritmos",
-            "academic_level": "Tercer semestre",
-            "credits": 4
+            "app_name": "Notion",
+            "app_description": "Herramienta de organización, apuntes y productividad para estudiantes.",
+            "app_link": "https://www.notion.so",
+            "app_academic_level": "Universitario",
+            "app_keywords": "productividad, notas, organización",
+            "app_category": "Productividad"
         },
         {
-            "name": "Física Mecánica",
-            "category": "Física",
-            "description": "Cinemática, dinámica y energía.",
-            "keywords": "física, mecánica, movimiento, fuerza, energía",
-            "academic_level": "Primer semestre",
-            "credits": 4
+            "app_name": "Brilliant",
+            "app_description": "Cursos interactivos para aprender matemáticas, lógica y ciencias.",
+            "app_link": "https://www.brilliant.org",
+            "app_academic_level": "Pregrado",
+            "app_keywords": "lógica, matemáticas, ciencias, interactivo",
+            "app_category": "STEM"
         },
         {
-            "name": "Bases de Datos",
-            "category": "Ingeniería de Sistemas",
-            "description": "Modelado, SQL y administración de bases de datos relacionales.",
-            "keywords": "bases de datos, SQL, modelado, PostgreSQL, MySQL",
-            "academic_level": "Cuarto semestre",
-            "credits": 3
+            "app_name": "Wolfram Alpha",
+            "app_description": "Motor de conocimiento computacional para resolver problemas complejos.",
+            "app_link": "https://www.wolframalpha.com",
+            "app_academic_level": "Universitario",
+            "app_keywords": "cálculo, ecuaciones, álgebra, ingeniería",
+            "app_category": "Ciencia y Tecnología"
         },
         {
-            "name": "Inteligencia Artificial",
-            "category": "Ingeniería de Sistemas",
-            "description": "Fundamentos de IA: algoritmos de búsqueda, redes neuronales y aprendizaje automático.",
-            "keywords": "IA, machine learning, redes neuronales, algoritmos, inteligencia",
-            "academic_level": "Sexto semestre",
-            "credits": 4
+            "app_name": "Google Classroom",
+            "app_description": "Plataforma para gestionar cursos, tareas y comunicación académica.",
+            "app_link": "https://classroom.google.com",
+            "app_academic_level": "Escolar",
+            "app_keywords": "tareas, clases, gestión educativa",
+            "app_category": "Educación"
         },
         {
-            "name": "Redes de Computadores",
-            "category": "Ingeniería de Sistemas",
-            "description": "Protocolos, arquitectura TCP/IP y seguridad en redes.",
-            "keywords": "redes, TCP/IP, protocolos, internet, seguridad",
-            "academic_level": "Quinto semestre",
-            "credits": 3
+            "app_name": "Blinkist",
+            "app_description": "Resúmenes de libros de no ficción en formato audio y texto.",
+            "app_link": "https://www.blinkist.com",
+            "app_academic_level": "Universitario",
+            "app_keywords": "resúmenes, lectura rápida, aprendizaje continuo",
+            "app_category": "Lectura"
         }
     ]
+
+
 
     for app_data in applications_data:
         app = Application(
             id=uuid.uuid4(),
-            app_name=app_data["name"],
-            app_category=app_data["category"],
-            app_link="https://universidad.edu/materias",
-            app_description=app_data["description"],
+            app_name=app_data["app_name"],
+            app_category=app_data["app_category"],
+            app_link=app_data["app_link"],
+            app_description=app_data["app_description"],
             app_source="manual",
-            app_keywords=app_data["keywords"],
-            app_academic_level=app_data["academic_level"],
-            app_credits=app_data["credits"]
+            app_keywords=app_data["app_keywords"],
+            app_academic_level=app_data["app_academic_level"]
         )
         db.add(app)
     db.commit()
@@ -124,7 +124,7 @@ def create_users(db):
         use_academic_level="Profesional",
         use_rol_id=ADMIN_ROLE_ID,
         auth_provider="local",
-        hashed_password=hash_password("admin123")
+        hashed_password=hash_password("Admin123456")
     )
     db.add(admin)
 
@@ -141,7 +141,7 @@ def create_users(db):
             use_academic_level=choice(academic_levels),
             use_rol_id=STUDENT_ROLE_ID,
             auth_provider="local",
-            hashed_password=hash_password("student123")
+            hashed_password=hash_password("Student1234858")
         )
         db.add(student)
     db.commit()
@@ -189,7 +189,6 @@ def main():
         create_applications(db)
         create_users(db)
         create_interactions_and_feedback(db)
-        print("🎉 Datos de prueba generados exitosamente.")
     except Exception as e:
         print(f"❌ Error al generar datos: {e}")
         db.rollback()
