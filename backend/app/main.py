@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, user, application, interaction, feedback, career    # importa tu router
+from app.routers import auth, user, application, interaction, feedback, career, recommendation   # importa tu router
 from app.core.dependencies import get_current_user
 
 # Inicializar la app
@@ -20,11 +20,6 @@ app.add_middleware(
 def root():
     return {"message": "Welcome to the Academic Recommender API"}
 
-@app.get("/recommendations")
-def get_recommendations(user_id: int = 1):
-    # Simulamos una recomendación básica (las dos primeras apps)
-    return {"user_id": user_id, "recommendations": mock_apps[:2]}
-
 # Rutas públicas
 app.include_router(auth.router)
 
@@ -34,3 +29,4 @@ app.include_router(application.router, dependencies=[Depends(get_current_user)])
 app.include_router(interaction.router, dependencies=[Depends(get_current_user)])
 app.include_router(feedback.router, dependencies=[Depends(get_current_user)])
 app.include_router(career.router, dependencies=[Depends(get_current_user)])
+app.include_router(recommendation.router, dependencies=[Depends(get_current_user)])

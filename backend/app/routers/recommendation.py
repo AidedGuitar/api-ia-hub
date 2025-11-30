@@ -1,19 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from app.core.dependencies import get_current_user
-from app.database import get_db
+from typing import List, Dict
+from app.core.dependencies import get_db, get_current_user
 from app.recommender.predictor import ContentBasedRecommender
 
-router = APIRouter(prefix="/recommendations", tags=["recommendations"])
+router = APIRouter(prefix="/recommendations", tags=["recommender"])
 
-@router.get("/")
-def get_recommendations(
-    current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
+@router.get("/", response_model=List[Dict])
+def get_recommendations(limit: int = Query(5, ge=1, le=50),
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
 ):
-    recommender = ContentBasedRecommender(db)
-    recommendations = recommender.recommend(user_id=current_user.id, top_n=5)
-    return {
-        "user_id": current_user.id,
-        "recommendations": recommendations
-    }
+    rec = ContentBasedRecommender(db)  # en prod -> cachear la instancia
+    results = rec.recommend(str(current_user.id), top_n=limit)
+    return results
