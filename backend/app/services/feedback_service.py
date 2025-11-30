@@ -73,7 +73,7 @@ def get_app_rating(db: Session, app_id: UUID) -> dict:
     result = db.query(
         func.avg(Feedback.fee_rating).label('average'),
         func.count(Feedback.fee_rating).label('count')
-    ).filter(Feedback.fee_app_id == app_id).one()
+    ).filter(Feedback.application_id  == app_id).one()
     return {
         'average': float(result.average or 0),
         'count': int(result.count)

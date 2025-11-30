@@ -6,7 +6,6 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin
 from app.auth.password_handler import hash_password, verify_password
 from sqlalchemy.exc import IntegrityError
-from fastapi import HTTPException, status
 
 STUDENT_ROLE_ID = UUID("d6d8d99a-e713-4d03-b2e2-6b66f05bdd6e")
 
