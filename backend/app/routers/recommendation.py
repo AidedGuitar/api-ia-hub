@@ -7,7 +7,7 @@ from app.recommender.predictor import ContentBasedRecommender
 router = APIRouter(prefix="/recommendations", tags=["recommender"])
 
 @router.get("/", response_model=List[Dict])
-def get_recommendations(limit: int = Query(5, ge=1, le=50),
+def get_recommendations(limit: int = Query(4, ge=1, le=50),
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
