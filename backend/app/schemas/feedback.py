@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from uuid import UUID
 from datetime import datetime
 from typing import Optional
+from app.schemas.user import UserBase
 
 class FeedbackBase(BaseModel):
     user_id: UUID
@@ -20,6 +21,7 @@ class FeedbackUpdate(BaseModel):
 
 class FeedbackRead(FeedbackBase):
     id: UUID
+    user: UserBase
     created_at: datetime
     updated_at: datetime
 

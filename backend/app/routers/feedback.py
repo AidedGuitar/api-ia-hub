@@ -19,9 +19,11 @@ router = APIRouter(
 @router.get("/", response_model=list[FeedbackRead])
 def read_all_feedbacks(
     skip: int = 0, limit: int = 20,
+    application_id: str | None = None,
+    user_id: str | None = None,
     db: Session = Depends(get_db)
 ):
-    return get_feedbacks(db, skip=skip, limit=limit)
+    return get_feedbacks(db, skip=skip, limit=limit, application_id=application_id, user_id=user_id)
 
 @router.get("/{feedback_id}", response_model=FeedbackRead)
 def read_feedback(

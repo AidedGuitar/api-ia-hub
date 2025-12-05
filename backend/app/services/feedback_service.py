@@ -17,8 +17,22 @@ def get_feedback(db: Session, feedback_id: UUID) -> Feedback | None:
     return db.query(Feedback).filter(Feedback.id == feedback_id).first()
 
 
-def get_feedbacks(db: Session, skip: int = 0, limit: int = 100) -> list[Feedback]:
-    return db.query(Feedback).offset(skip).limit(limit).all()
+def get_feedbacks(db: Session, skip: int = 0, limit: int = 100, application_id: str | None = None, user_id: str | None = None) -> list[Feedback]:
+     # Caso especial: ambos filtros => usa el método ya existente
+    if application_id and user_id:
+        result = get_feedback_by_user_app(db, user_id, application_id)
+        return [result] if result else []
+
+    # Caso general
+    query = db.query(Feedback)
+
+    if application_id:
+        query = query.filter(Feedback.application_id == application_id)
+
+    if user_id:
+        query = query.filter(Feedback.user_id == user_id)
+
+    return query.offset(skip).limit(limit).all()
 
 
 def create_feedback(db: Session, feedback_in: FeedbackCreate) -> Feedback:
