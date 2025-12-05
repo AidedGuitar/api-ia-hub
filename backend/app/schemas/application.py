@@ -27,6 +27,7 @@ class ApplicationUpdate(BaseModel):
 
 class ApplicationRead(ApplicationBase):
     id: UUID
+    avg_rating: float | None = None
     created_at: datetime
     updated_at: datetime
 
