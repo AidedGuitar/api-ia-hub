@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const singInSchema = yup.object({
-	email: yup
+	use_email: yup
 		.string()
 		.required("El correo es requerido")
 		.email("El correo electrónico no es válido")
