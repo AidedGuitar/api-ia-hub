@@ -169,7 +169,13 @@ class ContentBasedRecommender:
         if not liked_indices or self.tfidf_matrix is None:
             return self._get_default_recommendations(top_n)
 
-        user_profile = self.tfidf_matrix[liked_indices].mean(axis=0)  # sparse matrix
+        # create average vector
+        user_profile = self.tfidf_matrix[liked_indices].mean(axis=0)
+
+        # convert to ndarray
+        user_profile = np.asarray(user_profile).reshape(1, -1)
+
+        # compute cosine similarity
         sim_scores = cosine_similarity(user_profile, self.tfidf_matrix).flatten()
 
         # 5) Integrar promedio de ratings
